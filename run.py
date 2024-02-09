@@ -4,6 +4,7 @@ from datetime import datetime
 import requests
 
 url = 'http://www.weggefoehnt.de/sml/receive_sml_post.php?token=XXXXXXXX'
+headers = {'Content-Type': 'application/json'}
 single_data = {}
 
 while 1:
@@ -16,7 +17,7 @@ while 1:
         second = first[1].split("*",1)
         messgroesse_messart_tarifstufe = second[0].replace(".","_")
         wert = second[1]
-        wert_roh = wert.replace("(","").replace(")","")
+        wert_roh = wert.replace("255(","").replace(")","")
         wert_roh_a = wert_roh.split("*")
         wert_zahl = wert_roh_a[0]
         single_data[messgroesse_messart_tarifstufe] = wert_zahl
@@ -30,7 +31,8 @@ while 1:
         data = {}
         data['StatusSNS'] = data_sml
         data_json = json.dumps(data, indent = 4)
-        print(data_json)
-        x = requests.post(url, json = data_json)
+        #print(data_json)
+        mydata = {"key": "value"}
+        x = requests.post(url, json=data_json, headers=headers)
         print(x.text)
         single_data = {}
