@@ -3,7 +3,7 @@ import json
 from datetime import datetime
 import requests
 
-url = 'https://www.w3schools.com/python/demopage.php'
+url = 'http://www.weggefoehnt.de/privat/receive_sml_post.php'
 single_data = {}
 
 while 1:
@@ -32,4 +32,5 @@ while 1:
         data_json = json.dumps(data, indent = 4)
         print(data_json)
         x = requests.post(url, json = data_json)
+        print(x.text)
         single_data = {}
