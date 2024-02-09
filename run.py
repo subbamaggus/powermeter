@@ -1,5 +1,6 @@
 import sys
 import json
+from datetime import datetime
 
 single_data = {}
 
@@ -20,8 +21,9 @@ while 1:
         if(len(wert_roh_a)>1):
             wert_einheit = wert_roh_a[1]
     if 'DE1234560000000000000001298898157' == line.rstrip():
+        now = datetime.now()
         data_sml = {}
-        data_sml['Time'] = 'mytime'
+        data_sml['Time'] = now.strftime("%Y-%m-%dT%H:%M:%S")
         data_sml['SML'] = single_data
         data = {}
         data['StatusSNS'] = data_sml
