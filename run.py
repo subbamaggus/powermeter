@@ -3,7 +3,7 @@ import json
 from datetime import datetime
 import requests
 
-url = 'http://www.weggefoehnt.de/privat/receive_sml_post.php'
+url = 'http://www.weggefoehnt.de/privat/receive_sml_post.php?token=XXXXXXXX'
 single_data = {}
 
 while 1:
