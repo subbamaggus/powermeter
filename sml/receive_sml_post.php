@@ -22,7 +22,10 @@ if('XXXXXXXX' <> $token) {
 
 //$result = query($conn, $sql);
 
-echo "success really";
+$myjson = json_decode(file_get_contents("php://input"), true);
+$myjsondata = json_decode($myjson);
+
+echo $myjsondata->StatusSNS->Time . " - " . $myjsondata->StatusSNS->SML->{'1_8_0'} . " - " . $myjsondata->StatusSNS->SML->{'1_7_255'};
 
 
 ?>
