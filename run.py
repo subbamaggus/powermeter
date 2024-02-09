@@ -25,5 +25,6 @@ while 1:
         data_sml['SML'] = single_data
         data = {}
         data['StatusSNS'] = data_sml
-        print(data)
+        data_json = json.dumps(data, indent = 4)
+        print(data_json)
         single_data = {}
