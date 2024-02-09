@@ -22,7 +22,7 @@ if('XXXXXXXX' <> $token) {
 
 //$result = query($conn, $sql);
 
-echo "success";
+echo "success really";
 
 
 ?>
