@@ -18,6 +18,9 @@ if('XXXXXXXX' <> $token) {
     die();
 }
 
+$myjson = json_decode(file_get_contents("php://input"), true);
+$myjsondata = json_decode($myjson);
+
 $sql = "SELECT 1_8_0 FROM power ORDER BY time DESC LIMIT 1";
 $result = query($conn, $sql);
 $row = $result->fetch_assoc();
@@ -45,10 +48,7 @@ age
 
 */
 
-$myjson = json_decode(file_get_contents("php://input"), true);
-$myjsondata = json_decode($myjson);
-
-echo $myjsondata->StatusSNS->Time . " - " . $myjsondata->StatusSNS->SML->{'1_8_0'} . " - " . $myjsondata->StatusSNS->SML->{'1_7_255'};
-echo "updated: " . $time . " - " . $value . " - " . $difference;
+echo $myjsondata->StatusSNS->Time . " - " . $myjsondata->StatusSNS->SML->{'1_8_0'} . " - " . $myjsondata->StatusSNS->SML->{'1_7_255'} . "\r\n";
+echo "updated: " . $time . " - " . $value . " - " . $difference . "\r\n";
 
 ?>
