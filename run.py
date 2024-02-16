@@ -7,6 +7,8 @@ url = 'http://www.weggefoehnt.de/sml/receive_sml_post.php?token=XXXXXXXX'
 headers = {'Content-Type': 'application/json'}
 single_data = {}
 
+counter = 0
+
 while 1:
     line = sys.stdin.readline()
     if not line:
@@ -33,6 +35,10 @@ while 1:
         data_json = json.dumps(data, indent = 4)
         #print(data_json)
         mydata = {"key": "value"}
-        x = requests.post(url, json=data_json, headers=headers)
-        print(x.text)
+        print("process line...")
+        if(counter > 10):
+            x = requests.post(url, json=data_json, headers=headers)
+            print(x.text)
+            counter = 0
         single_data = {}
+        counter = counter + 1
