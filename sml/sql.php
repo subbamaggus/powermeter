@@ -1,21 +1,21 @@
 <?php
 
-$servername = "localhost";
-$username = "root";
-$password = "";
+$dbhost = "localhost";
+$dbuser = "root";
+$dbpass = "";
 $dbname = "house";
 
 if ("localhost" != $_SERVER["SERVER_NAME"])
     require('config.php');
 
-function connect($servername, $username, $password, $dbname) {
-    $conn = new mysqli($servername, $username, $password, $dbname);
+function connect($dbhost, $dbuser, $dbpass, $dbname) {
+    $conn = new mysqli($dbhost, $dbuser, $dbpass, $dbname);
     $conn->set_charset("latin1_german1_ci");
     
     return $conn;
 }
 
-$conn = connect($servername, $username, $password, $dbname) or die("Connection failed: " . connect_error());
+$conn = connect($dbhost, $dbuser, $dbpass, $dbname) or die("Connection failed: " . connect_error());
 if (connect_errno()) {
     printf("Connect failed: %s\n", connect_error());
     exit();
