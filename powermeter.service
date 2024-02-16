@@ -1,0 +1,8 @@
+[Unit]
+Description=my Powermeter
+
+[Service]
+ExecStart=/home/pi/powermeter.py
+
+[Install]
+WantedBy=multi-user.target
