@@ -16,3 +16,25 @@ netcat 192.168.178.83 5000
 !
 1346538668
 DE1234560000000000000001298898157
+
+
+2024-02-09 22:53:04 21004.9873521
+
+convert into json:
+
+    {
+        "StatusSNS": {
+            "Time": "2023-03-22T21:42:51",
+            "SML": {
+                "1_8_0": 20995.8225132,
+                "1_7_255": 194.81
+            }
+        }
+    }
+
+and send it via http post to
+'http://www.weggefoehnt.de/sml/receive_sml_post.php?token=XXXXXXXX'
+
+
+
+receive_sml_post.php will process further

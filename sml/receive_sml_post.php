@@ -18,18 +18,22 @@ if('XXXXXXXX' <> $token) {
     die();
 }
 
-//$sql = "INSERT INTO data_object (title, name, address, contact, fk_object) VALUES ('${title}', '${name}', '${address}', '${contact}', '${parent}')";
-//$result = query($conn, $sql);
+$sql = "SELECT 1_8_0 FROM power ORDER BY time DESC LIMIT 1";
+$result = query($conn, $sql);
+$row = $result->fetch_assoc();
+$last_value = $row["1_8_0"];
+
+$time = $myjsondata->StatusSNS->Time;
+$time = str_replace("T", " ", $time);
+$value = $myjsondata->StatusSNS->SML->{'1_8_0'};
+$difference = $value - $last_value;
+
+$sql = "INSERT INTO power (time, 1_8_0, diference) VALUES ('${time}', '${value}', '${difference}')";
+$result = query($conn, $sql);
 
 /*
 
-select last
-calculate power
-insert line
-
-only log every 10 seconds
-
-prune concept:
+prune concept: (separate script)
 keep the last week.
 delete all except one per hour for the last 4 weeks
 delete all except one per day for the restore_error_handler
@@ -45,6 +49,6 @@ $myjson = json_decode(file_get_contents("php://input"), true);
 $myjsondata = json_decode($myjson);
 
 echo $myjsondata->StatusSNS->Time . " - " . $myjsondata->StatusSNS->SML->{'1_8_0'} . " - " . $myjsondata->StatusSNS->SML->{'1_7_255'};
-
+echo "updated: " . $time . " - " . $value . " - " . $difference;
 
 ?>
