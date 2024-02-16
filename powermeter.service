@@ -2,7 +2,7 @@
 Description=my Powermeter
 
 [Service]
-ExecStart=/home/pi/powermeter.py
+ExecStart=/var/log/powermeter.sh start
 
 [Install]
 WantedBy=multi-user.target
