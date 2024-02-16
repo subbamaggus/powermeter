@@ -8,7 +8,7 @@ status() {
 start() {
     while true
     do
-        netcat 192.168.178.83 5000 | python /var/log/powermeter.py
+        netcat 192.168.178.83 5000 | python /home/pi/powermeter.py
     done
 }
 
