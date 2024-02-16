@@ -31,22 +31,14 @@ $time = str_replace("T", " ", $time);
 $value = $myjsondata->StatusSNS->SML->{'1_8_0'};
 $difference = $value - $last_value;
 
-$sql = "INSERT INTO power (time, 1_8_0, diference) VALUES ('${time}', '${value}', '${difference}')";
+$sql = "INSERT INTO power (time, 1_8_0, difference) VALUES ('${time}', '${value}', '${difference}')";
 $result = query($conn, $sql);
 
-/*
-
-prune concept: (separate script)
-keep the last week.
-delete all except one per hour for the last 4 weeks
-delete all except one per day for the restore_error_handler
-
-age
-0-7     all
-7-28    hourly
->28     daily
-
-*/
+$error = error($conn);
+if("" <> $error) {
+    echo $sql;
+    echo $error;
+}
 
 echo $myjsondata->StatusSNS->Time . " - " . $myjsondata->StatusSNS->SML->{'1_8_0'} . " - " . $myjsondata->StatusSNS->SML->{'1_7_255'} . "\r\n";
 echo "updated: " . $time . " - " . $value . " - " . $difference . "\r\n";
