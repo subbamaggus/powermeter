@@ -14,14 +14,18 @@ function get_control($myget, $key, $default) {
 $token = get_control($_REQUEST, "token", NULL);
 
 if('XXXXXXXX' <> $token) {
-    echo "error";
+    echo "error: not authenticated";
     die();
 }
-    
+
 //$sql = "INSERT INTO data_object (title, name, address, contact, fk_object) VALUES ('${title}', '${name}', '${address}', '${contact}', '${parent}')";
 //$result = query($conn, $sql);
 
 /*
+
+select last
+calculate power
+insert line
 
 only log every 10 seconds
 
@@ -29,6 +33,11 @@ prune concept:
 keep the last week.
 delete all except one per hour for the last 4 weeks
 delete all except one per day for the restore_error_handler
+
+age
+0-7     all
+7-28    hourly
+>28     daily
 
 */
 
