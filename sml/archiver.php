@@ -25,6 +25,7 @@ class MyArchiverAPI {
     $last_value = $all_items[0]["1_8_0"];
     $last_time = $all_items[0]["time"];
     
+    // format and calulate data
     $time = $myjsondata->StatusSNS->Time;
     $time = str_replace("T", " ", $time);
     $value = $myjsondata->StatusSNS->SML->{'1_8_0'};
