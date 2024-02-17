@@ -3,7 +3,10 @@ import json
 from datetime import datetime
 import requests
 
-url = 'http://www.weggefoehnt.de/sml/receive_sml_post.php?token=XXXXXXXX'
+with open("powermeter.json") as json_data_file:
+    configdata = json.load(json_data_file)
+    
+url = 'http://www.weggefoehnt.de/sml/receive_sml_post.php?token=' + configdata['secret_token']
 headers = {'Content-Type': 'application/json'}
 single_data = {}
 counter = 11

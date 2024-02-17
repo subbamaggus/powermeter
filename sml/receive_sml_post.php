@@ -5,7 +5,7 @@ require("archiver.php");
 
 $token = get_control($_REQUEST, "token", NULL);
 
-if('XXXXXXXX' <> $token) {
+if($secret_token <> $token) {
   echo "error: not authenticated";
   die();
 }
