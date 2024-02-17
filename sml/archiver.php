@@ -84,19 +84,19 @@ class MyArchiverAPI {
     $sql = "SELECT * FROM power WHERE time > ? and time < ? ORDER BY time";
            
     $statement = self::$mysqli->prepare($sql);
+    $statement->bind_param('ss', $from, $to);
     $statement->execute();
     
     $result = $statement->get_result();
 
     $all_items = mysqli_fetch_all($result,MYSQLI_ASSOC);
     
-    $date = $all_items[0]['time'];
-    
-    $value = $all_items[0]['energy'];
-    
-    $return_result = [ "date" => $date,
-            "energy" => $value
+    $return_result = array();
+    foreach ($all_items as $item) {
+      $return_result[] = [ "date" => $item['time'],
+            "energy" => $item['energy']
           ];
+    }
           
     return $return_result;
   }  
