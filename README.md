@@ -15,8 +15,11 @@
 
 Sample SML via
 
+getting data via netcat:
+
 > netcat 192.168.178.83 5000
 
+data that is returned looks like:
 
 > /ESY5Q3DA1004 V3.03
 > 
@@ -33,7 +36,7 @@ Sample SML via
 > DE1234560000000000000001298898157
 
 
-### convert it into json
+### convert it into json (similar to data structure of tasmota)
 
 >     {
 >         "StatusSNS": {
@@ -52,3 +55,7 @@ and send it via http post to
 ## sml/ (receive and store data)
 
 receive_sml_post.php will process further
+
+index.php shows the data via google chart
+
+history.php shows past data incl data browsing
