@@ -3,20 +3,11 @@
 require("config.php");
 require("archiver.php");
 
-function get_control($myget, $key, $default) {
-    $mydefault = $default;
-
-    if(isset($myget[$key]))
-        $mydefault = $myget[$key];
-
-    return $mydefault;
-}
-
 $token = get_control($_REQUEST, "token", NULL);
 
 if('XXXXXXXX' <> $token) {
-    echo "error: not authenticated";
-    die();
+  echo "error: not authenticated";
+  die();
 }
 
 $myjson = json_decode(file_get_contents("php://input"), true);

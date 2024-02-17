@@ -2,7 +2,7 @@ google.charts.load('current', {'packages':['corechart','gauge']});
 google.charts.setOnLoadCallback(drawChart);
 
 var history_length = 180;
-var pollingRate = 1000;
+var pollingRate = 5000;
 
 var ring_buffer = initRingBuffer(history_length);
 var min_ring_buffer_size = 1;
@@ -22,11 +22,11 @@ function initRingBuffer(length) {
   if(length < min_ring_buffer_size)
     length = min_ring_buffer_size;
     
-  var ring_buffer_header = ['Time',  'Data'];
+  var ring_buffer_header = ['Time', 'Data'];
   var ring_buffer_l = [ring_buffer_header];
 
   for(var i = length; i > 0; i--) {
-      ring_buffer_l.push(['' + i, 0]);
+    ring_buffer_l.push(['' + i, 0]);
   }
   return ring_buffer_l;
 }

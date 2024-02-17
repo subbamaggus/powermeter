@@ -1,5 +1,14 @@
 <?php
 
+function get_control($myget, $key, $default) {
+  $mydefault = $default;
+
+  if(isset($myget[$key]))
+    $mydefault = $myget[$key];
+
+  return $mydefault;
+}
+
 class MyArchiverAPI {
   protected static $mysqli;
 
@@ -40,8 +49,8 @@ class MyArchiverAPI {
     
     $error = $statement->errno;
     if("" <> $error) {
-        echo $sql;
-        echo $error;
+      echo $sql;
+      echo $error;
     }
     
     $return_result = $myjsondata->StatusSNS->Time . " - " . $myjsondata->StatusSNS->SML->{'1_8_0'} . " - " . $myjsondata->StatusSNS->SML->{'1_7_255'} . "\r\n";
@@ -70,6 +79,27 @@ class MyArchiverAPI {
           
     return $return_result;
   }
+
+  function getData($from, $to) {
+    $sql = "SELECT * FROM power WHERE time > ? and time < ? ORDER BY time";
+           
+    $statement = self::$mysqli->prepare($sql);
+    $statement->execute();
+    
+    $result = $statement->get_result();
+
+    $all_items = mysqli_fetch_all($result,MYSQLI_ASSOC);
+    
+    $date = $all_items[0]['time'];
+    
+    $value = $all_items[0]['energy'];
+    
+    $return_result = [ "date" => $date,
+            "energy" => $value
+          ];
+          
+    return $return_result;
+  }  
 }
 
 ?>
