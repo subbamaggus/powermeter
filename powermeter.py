@@ -3,7 +3,7 @@ import json
 from datetime import datetime
 import requests
 
-with open("powermeter.json") as json_data_file:
+with open("/home/pi/powermeter.json") as json_data_file:
     configdata = json.load(json_data_file)
     
 url = 'http://www.weggefoehnt.de/sml/receive_sml_post.php?token=' + configdata['secret_token']
