@@ -1,8 +1,12 @@
 google.charts.load('current', {'packages':['corechart']});
 google.charts.setOnLoadCallback(pollDataSource);
 
-var date_from = "2024-02-16 22:00:00";
-var date_to = "2024-02-16 23:00:00";
+var date_from_date = new Date();
+date_from_date.setHours(date_from_date.getHours() - 12);
+var date_to_date = new Date();
+
+var date_from = date_from_date.toISOString("YYYY-MM-DD HH:mm:ss").substring(0, 19).replace("T", ' ');
+var date_to = date_to_date.toISOString("YYYY-MM-DD HH:mm:ss").substring(0, 19).replace("T", ' ');
 
 var ring_buffer;
 
@@ -12,6 +16,11 @@ var history_options;
 var last_date;
   
 var intervalID;
+
+function formatDate(date) {
+  var mydate = new Date(date);
+  return mydate.toISOString("YYYY-MM-DD HH:mm:ss").substring(0, 19).replace("T", ' ');
+}
 
 function initRingBuffer(data) {
     
@@ -34,9 +43,9 @@ function changeFrom(diff) {
   
   console.log("changeFrom:" + diff);
   
-  console.log(mydate.toISOString("YYYY-MM-DD HH:mm:ss").substring(0, 19).replace("T", ' '));
-  date_from = mydate.toISOString("YYYY-MM-DD HH:mm:ss").substring(0, 19).replace("T", ' ');
+  date_from = formatDate(mydate);
   document.getElementById("date_from").innerHTML = "date_from: " + date_from;
+  pollDataSource();
 }
 
 function changeTo(diff) {
@@ -45,9 +54,9 @@ function changeTo(diff) {
   
   console.log("changeFrom:" + diff);
   
-  console.log(mydate.toISOString("YYYY-MM-DD HH:mm:ss").substring(0, 19).replace("T", ' '));
-  date_to = mydate.toISOString("YYYY-MM-DD HH:mm:ss").substring(0, 19).replace("T", ' ');
+  date_to = formatDate(mydate);
   document.getElementById("date_to").innerHTML = "date_to: " + date_to;
+  pollDataSource();
 }
 
 function processData(jsonData) {
