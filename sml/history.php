@@ -20,14 +20,12 @@
       <input type="image" width="12" height="12" src="icon/plus.png" onclick="changeRingBufferSize(30)" />
       <input type="image" width="12" height="12" src="icon/time.png" />
       <input type="image" width="12" height="12" src="icon/minus.png" onclick="changeRingBufferSize(-30)" />
-      |
-      <input type="image" width="12" height="12" src="icon/slower.png" onClick="changePollRate(500)" />
-      <input type="image" width="12" height="12" src="icon/faster.png" onClick="changePollRate(-500)" />
-      <label id="refresh_rate"></label>
 
       <label id="date_from"></label>
+      |
       <label id="date_to"></label>
-      
+      <br>
+      <label><a href="./">home</a></label>
     </center>
   </body>
 </html>

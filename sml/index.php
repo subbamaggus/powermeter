@@ -25,6 +25,8 @@
       <input type="image" width="12" height="12" src="icon/slower.png" onClick="changePollRate(500)" />
       <input type="image" width="12" height="12" src="icon/faster.png" onClick="changePollRate(-500)" />
       <label id="refresh_rate"></label>
+      <br>
+      <label><a href="./history.php">history</a></label>
     </center>
   </body>
 </html>
