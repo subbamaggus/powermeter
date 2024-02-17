@@ -4,6 +4,9 @@ google.charts.setOnLoadCallback(drawChart);
 var history_length = 180;
 var pollingRate = 5000;
 
+var date_from = "2024-02-16 22:00:00";
+var date_to = "2024-02-17 02:00:00";
+
 var ring_buffer = initRingBuffer(history_length);
 var min_ring_buffer_size = 1;
   
@@ -70,8 +73,6 @@ function processData(jsonData) {
   history_data = addToRingBuffer(history_data, history_length, DataObject.date, DataObject.energy);
   history_chart.draw(history_data, history_options);
 
-  gauge_data.setValue(0, 1, DataObject.energy);
-  gauge_chart.draw(gauge_data, gauge_options);
 }
 
 function handler() {
@@ -117,9 +118,6 @@ function drawChart() {
     minorTicks: 5
   };
 
-  gauge_chart = new google.visualization.Gauge(document.getElementById('gauge_chart'));
-  gauge_chart.draw(gauge_data, gauge_options);
-
   // second chart
   history_options = {
     title: 'Energy',
@@ -136,5 +134,9 @@ function drawChart() {
   history_chart.draw(history_data, history_options);
 
   document.getElementById("refresh_rate").innerHTML = "RefreshRate: " + pollingRate;
+  
+  document.getElementById("date_from").innerHTML = "date_from: " + date_from;
+  document.getElementById("date_to").innerHTML = "date_to: " + date_to;
+  
   intervalID = setInterval(pollDataSource, pollingRate);
 }
