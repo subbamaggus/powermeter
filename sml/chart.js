@@ -10,6 +10,7 @@ var min_ring_buffer_size = 1;
 var history_chart;
 var history_data;
 var history_options;
+var last_date;
   
 var gauge_chart;
 var gauge_data;
@@ -30,7 +31,14 @@ function initRingBuffer(length) {
   return ring_buffer_l;
 }
 
-function addToRingBuffer(data, length, last_value) {
+function addToRingBuffer(data, length, mydate, last_value) {
+  
+  if(last_date == mydate) {
+    return data;
+  }
+
+  last_date = mydate;
+  
   if(length < min_ring_buffer_size)
     length = min_ring_buffer_size;
     
@@ -59,7 +67,7 @@ function changeRingBufferSize(diff) {
 function processData(jsonData) {
   var DataObject = JSON.parse(jsonData);
 
-  history_data = addToRingBuffer(history_data, history_length, DataObject.energy);
+  history_data = addToRingBuffer(history_data, history_length, DataObject.date, DataObject.energy);
   history_chart.draw(history_data, history_options);
 
   gauge_data.setValue(0, 1, DataObject.energy);
