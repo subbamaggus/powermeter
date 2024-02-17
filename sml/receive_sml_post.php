@@ -1,6 +1,7 @@
 <?PHP
 
-require("sql.php");
+require("config.php");
+require("archiver.php");
 
 function get_control($myget, $key, $default) {
     $mydefault = $default;
@@ -21,29 +22,13 @@ if('XXXXXXXX' <> $token) {
 $myjson = json_decode(file_get_contents("php://input"), true);
 $myjsondata = json_decode($myjson);
 
-$sql = "SELECT * FROM power ORDER BY time DESC LIMIT 1";
-$result = query($conn, $sql);
-$row = $result->fetch_assoc();
-$last_value = $row["1_8_0"];
-$last_time = $row["time"];
+$myAPI = new MyArchiverAPI();
+$myAPI->set_db_connection($dbhost, $dbuser, $dbpass, $dbname);
 
-$time = $myjsondata->StatusSNS->Time;
-$time = str_replace("T", " ", $time);
-$value = $myjsondata->StatusSNS->SML->{'1_8_0'};
-$diff_energy = $value - $last_value;
-$diff_time = strtotime($time) - strtotime($last_time);
-$energy = ($diff_energy * 3600 * 1000) / $diff_time;
+$result = $myAPI->storeData($myjsondata);
 
-$sql = "INSERT INTO power (time, 1_8_0, diff_energy, diff_time, energy) VALUES ('${time}', '${value}', '${diff_energy}', '${diff_time}', '${energy}')";
-$result = query($conn, $sql);
+//$myresult = json_encode($result);
 
-$error = error($conn);
-if("" <> $error) {
-    echo $sql;
-    echo $error;
-}
-
-echo $myjsondata->StatusSNS->Time . " - " . $myjsondata->StatusSNS->SML->{'1_8_0'} . " - " . $myjsondata->StatusSNS->SML->{'1_7_255'} . "\r\n";
-echo "updated: " . $time . " - " . $value . " - " . $diff_energy . " - " . $diff_time . " - " . $energy . "\r\n";
+echo $result;
 
 ?>
