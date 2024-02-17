@@ -17,13 +17,13 @@
   <body>
     <center>
       <div id="history_chart" style="width: 400px; height: 250px;"></div>
-      <input type="image" width="12" height="12" src="icon/plus.png" onclick="changeRingBufferSize(30)" />
-      <input type="image" width="12" height="12" src="icon/time.png" />
-      <input type="image" width="12" height="12" src="icon/minus.png" onclick="changeRingBufferSize(-30)" />
-
+      <input type="image" width="12" height="12" src="icon/plus.png" onclick="changeFrom(-2)" />
+      <input type="image" width="12" height="12" src="icon/minus.png" onclick="changeFrom(2)" />
       <label id="date_from"></label>
       |
       <label id="date_to"></label>
+      <input type="image" width="12" height="12" src="icon/minus.png" onclick="changeTo(-2)" />
+      <input type="image" width="12" height="12" src="icon/plus.png" onclick="changeTo(2)" />
       <br>
       <label><a href="./">home</a></label>
     </center>

@@ -28,6 +28,28 @@ function initRingBuffer(data) {
   return ring_buffer_l;
 }
 
+function changeFrom(diff) {
+  var mydate = new Date(date_from);
+  mydate.setHours(mydate.getHours() + diff);
+  
+  console.log("changeFrom:" + diff);
+  
+  console.log(mydate.toISOString("YYYY-MM-DD HH:mm:ss").substring(0, 19).replace("T", ' '));
+  date_from = mydate.toISOString("YYYY-MM-DD HH:mm:ss").substring(0, 19).replace("T", ' ');
+  document.getElementById("date_from").innerHTML = "date_from: " + date_from;
+}
+
+function changeTo(diff) {
+  var mydate = new Date(date_to);
+  mydate.setHours(mydate.getHours() + diff);
+  
+  console.log("changeFrom:" + diff);
+  
+  console.log(mydate.toISOString("YYYY-MM-DD HH:mm:ss").substring(0, 19).replace("T", ' '));
+  date_to = mydate.toISOString("YYYY-MM-DD HH:mm:ss").substring(0, 19).replace("T", ' ');
+  document.getElementById("date_to").innerHTML = "date_to: " + date_to;
+}
+
 function processData(jsonData) {
   var DataObject = JSON.parse(jsonData);
 
