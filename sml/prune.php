@@ -12,6 +12,18 @@ age
 7-28    hourly
 >28     daily
 
+
+SELECT max(time), max(id), DATE_FORMAT(time, '%d-%m-%Y %H:%i') 
+FROM `power` 
+WHERE time < DATE_SUB(NOW(), INTERVAL 5 HOUR)
+AND time > DATE_SUB(NOW(), INTERVAL 10 HOUR)
+GROUP by DATE_FORMAT(time, '%d-%m-%Y %H')
+
+SELECT max(time), max(id), DATE_FORMAT(time, '%d-%m-%Y %H:%i') 
+FROM `power` 
+WHERE time < DATE_SUB(NOW(), INTERVAL 10 HOUR)
+GROUP by DATE_FORMAT(time, '%d-%m-%Y %H')
+
 */
 
 ?>

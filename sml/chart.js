@@ -136,5 +136,6 @@ function drawChart() {
   history_chart.draw(history_data, history_options);
 
   document.getElementById("refresh_rate").innerHTML = "RefreshRate: " + pollingRate;
+  pollDataSource();
   intervalID = setInterval(pollDataSource, pollingRate);
 }
