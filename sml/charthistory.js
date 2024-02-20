@@ -86,11 +86,11 @@ function pollDataSource() {
 function drawChart() {
 
   history_options = {
-    title: 'Energy',
+    title: 'Messwert',
     legend: { position: 'bottom' },
     vAxis: {
       minValue: 0,
-      maxValue: 3000
+      maxValue: 2000
     },
     isStacked: true
   };
