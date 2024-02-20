@@ -1,6 +1,6 @@
 <html>
   <head>
-    <meta name="viewport" content="initial-scale=1, maximum-scale=2">
+    <meta name="viewport" content="initial-scale=0.5, maximum-scale=2">
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
     <style>
         label {
@@ -16,7 +16,7 @@
   </head>
   <body>
     <center>
-      <div id="history_chart" style="width: 400px; height: 250px;"></div>
+      <div id="history_chart" style="width: 800px; height: 500px;"></div>
       <input type="image" width="12" height="12" src="icon/plus.png" onclick="changeFrom(-2)" />
       <input type="image" width="12" height="12" src="icon/minus.png" onclick="changeFrom(2)" />
       <label id="date_from"></label>

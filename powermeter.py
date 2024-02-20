@@ -32,21 +32,27 @@ while 1:
             wert_einheit = wert_roh_a[1]
             
     if 'DE1234560000000000000001298898157' == line.rstrip():
-        now = datetime.now()
-        
-        data_sml = {}
-        data_sml['Time'] = now.strftime("%Y-%m-%dT%H:%M:%S")
-        data_sml['SML'] = single_data
-        
-        data = {}
-        data['StatusSNS'] = data_sml
-        data_json = json.dumps(data, indent = 4)
 
         print("data set processed ...")
         #only send every 10th line
         if(counter > 10):
+            now = datetime.now()
+            
+            data_sml = {}
+            data_sml['Time'] = now.strftime("%Y-%m-%dT%H:%M:%S")
+            data_sml['SML'] = single_data
+            
+            data = {}
+            data['StatusSNS'] = data_sml
+            
+            oil = requests.get("http://192.168.178.156/")
+            data['oil'] = json.loads(oil.text)
+            
+            data_json = json.dumps(data, indent = 4)
+            
             x = requests.post(url, json=data_json, headers=headers)
             print(x.text)
+            
             counter = 0
         single_data = {}
         counter = counter + 1
