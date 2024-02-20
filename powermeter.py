@@ -44,12 +44,13 @@ while 1:
             
             data = {}
             data['StatusSNS'] = data_sml
-            
-            oil = requests.get("http://192.168.178.156/")
-            data['oil'] = json.loads(oil.text)
+            try: 
+            	oil = requests.get("http://192.168.178.156/", timeout=3)
+            	data['oil'] = json.loads(oil.text)
+	    except BaseException as exception:
+                print("oil sensor not available")	
             
             data_json = json.dumps(data, indent = 4)
-            
             x = requests.post(url, json=data_json, headers=headers)
             print(x.text)
             

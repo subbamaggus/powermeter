@@ -41,16 +41,18 @@ class MyArchiverAPI {
     $diff_energy = $value - $last_value;
     $diff_time = strtotime($time) - strtotime($last_time);
     $energy = ($diff_energy * 3600 * 1000) / $diff_time;
+    $oil1 = $myjsondata->oil->Wert1;
+    $oil2 = $myjsondata->oil->Wert2;
     
-    $sql = "INSERT INTO power (time, 1_8_0, diff_energy, diff_time, energy) VALUES (?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO power (time, 1_8_0, diff_energy, diff_time, energy, oil1, oil2) VALUES (?, ?, ?, ?, ?, ?, ?)";
     $statement = self::$mysqli->prepare($sql);
-    $statement->bind_param('sddid', $time, $value, $diff_energy, $diff_time, $energy);
+    $statement->bind_param('sddiddd', $time, $value, $diff_energy, $diff_time, $energy, $oil1, $oil2);
     $statement->execute();
     
     $error = $statement->errno;
     if("" <> $error) {
-      echo $sql;
-      echo $error;
+      echo $sql . "\n";
+      echo $statement->error . "\n";
     }
     
     $return_result = $myjsondata->StatusSNS->Time . " - " . $myjsondata->StatusSNS->SML->{'1_8_0'} . " - " . $myjsondata->StatusSNS->SML->{'1_7_255'} . "\r\n";
