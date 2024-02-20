@@ -29,7 +29,7 @@ function initRingBuffer(data) {
   var i = 0;
   
   function addElement(item) {
-    ring_buffer_l.push([item.date, Number(item.energy)]);
+    ring_buffer_l.push([item.date, Number(item.value)]);
     i ++;
   }
 
@@ -79,7 +79,7 @@ function handler() {
 function pollDataSource() {
   var client = new XMLHttpRequest();
   client.onload = handler;
-  client.open("GET", "api.php?date_from=" + date_from + "&date_to=" + date_to);
+  client.open("GET", "api.php?date_from=" + date_from + "&date_to=" + date_to + "&sensor=" + document.getElementById("sensor_select").value);
   client.send();
 }
 
@@ -102,4 +102,8 @@ function drawChart() {
   document.getElementById("date_from").innerHTML = "date_from: " + date_from;
   document.getElementById("date_to").innerHTML = "date_to: " + date_to;
 
+}
+
+function changeSensor() {
+  pollDataSource();
 }

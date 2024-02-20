@@ -26,6 +26,11 @@
       <input type="image" width="12" height="12" src="icon/plus.png" onclick="changeTo(2)" />
       <br>
       <label><a href="./">home</a></label>
+      <select name="sensor_select" id="sensor_select" onchange="changeSensor()">
+        <option value="energy">energy</option>
+        <option value="oil1">oil1</option>
+        <option value="oil2">oil2</option>
+      </select>
     </center>
   </body>
 </html>

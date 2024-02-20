@@ -82,7 +82,7 @@ class MyArchiverAPI {
     return $return_result;
   }
 
-  function getData($from, $to) {
+  function getData($sensor, $from, $to) {
     $sql = "SELECT * FROM power WHERE time > ? and time < ? ORDER BY time";
            
     $statement = self::$mysqli->prepare($sql);
@@ -96,7 +96,7 @@ class MyArchiverAPI {
     $return_result = array();
     foreach ($all_items as $item) {
       $return_result[] = [ "date" => $item['time'],
-            "energy" => $item['energy']
+            "value" => $item[$sensor]
           ];
     }
           
