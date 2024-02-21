@@ -42,7 +42,11 @@ class MyArchiverAPI {
     $diff_time = strtotime($time) - strtotime($last_time);
     $energy = ($diff_energy * 3600 * 1000) / $diff_time;
     $oil1 = $myjsondata->oil->Wert1;
+    if(NULL == $oil1)
+        $oil1 = -1;
     $oil2 = $myjsondata->oil->Wert2;
+    if(NULL == $oil2)
+        $oil2 = -1;
     
     $sql = "INSERT INTO power (time, 1_8_0, diff_energy, diff_time, energy, oil1, oil2) VALUES (?, ?, ?, ?, ?, ?, ?)";
     $statement = self::$mysqli->prepare($sql);

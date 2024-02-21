@@ -47,6 +47,18 @@ AND id NOT IN (SELECT min(id)
     FROM `power` 
     WHERE time < DATE_SUB(NOW(), INTERVAL 4 DAY)
     GROUP by DATE_FORMAT(time, '%d-%m-%Y'))
+
+SELECT * 
+FROM power
+WHERE time < DATE_SUB(NOW(), INTERVAL 2 DAY)
+    AND time > DATE_SUB(NOW(), INTERVAL 5 DAY)
+   ORDER BY time
+    
+UPDATE power
+set energy = ?
+where id = ?  
+  
+    recalc all values between 2 and 5 days
 */
 
 ?>
