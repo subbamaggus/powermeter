@@ -13,7 +13,7 @@ if($secret_token <> $token) {
 $myAPI = new MyArchiverAPI();
 $myAPI->set_db_connection($dbhost, $dbuser, $dbpass, $dbname);
 
-$result = $myAPI->purgeDB();
+$result = $myAPI->purgeDB(2, 4);
 
 echo $result;
 

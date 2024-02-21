@@ -54,12 +54,13 @@ class MyArchiverAPI {
     $statement->execute();
     
     $error = $statement->errno;
+    $return_result = "";
     if("" <> $error) {
-      echo $sql . "\n";
-      echo $statement->error . "\n";
+      $return_result .=  $sql . "\n";
+      $return_result .=  $statement->error . "\n";
     }
     
-    $return_result = $myjsondata->StatusSNS->Time . " - " . $myjsondata->StatusSNS->SML->{'1_8_0'} . " - " . $myjsondata->StatusSNS->SML->{'1_7_255'} . "\r\n";
+    $return_result .= $myjsondata->StatusSNS->Time . " - " . $myjsondata->StatusSNS->SML->{'1_8_0'} . " - " . $myjsondata->StatusSNS->SML->{'1_7_255'} . "\r\n";
     $return_result .= "updated: " . $time . " - " . $value . " - " . $diff_energy . " - " . $diff_time . " - " . $energy . "\r\n";
     
     return $return_result;
@@ -107,7 +108,7 @@ class MyArchiverAPI {
     return $return_result;
   }
   
-  function purgeDB() {
+  function purgeDB($limit1, $limit2) {
 /*
 
 purge concept: (separate script)
@@ -156,18 +157,48 @@ AND id NOT IN (SELECT min(id)
     WHERE time < DATE_SUB(NOW(), INTERVAL 4 DAY)
     GROUP by DATE_FORMAT(time, '%d-%m-%Y'))
 
-SELECT * 
-FROM power
-WHERE time < DATE_SUB(NOW(), INTERVAL 2 DAY)
-    AND time > DATE_SUB(NOW(), INTERVAL 5 DAY)
-   ORDER BY time
     
-UPDATE power
-set energy = ?
-where id = ?  
-  
-    recalc all values between 2 and 5 days
-*/    
+*/
+    // recalc all values between 2 and 5 days
+    $sql = "SELECT * FROM power WHERE time < DATE_SUB(NOW(), INTERVAL " . $limit1 . " DAY) AND time > DATE_SUB(NOW(), INTERVAL " . ($limit2 + 1) . " DAY) ORDER BY time";
+           
+    $statement = self::$mysqli->prepare($sql);
+    $statement->execute();
+    
+    $result = $statement->get_result();
+
+    $all_items = mysqli_fetch_all($result,MYSQLI_ASSOC);
+    $count = count($all_items);
+
+    $return_value = "";    
+    for($i = 1; $i < $count; $i++) {
+
+      $diff_energy = $all_items[$i]['1_8_0'] - $all_items[$i - 1]['1_8_0'];
+      $diff_time = strtotime($all_items[$i]['time']) - strtotime($all_items[$i - 1]['time']);
+      $energy = ($diff_energy * 3600 * 1000) / $diff_time;
+      
+      if($diff_time <> $all_items[$i]['diff_time']) {
+        $return_value .= $all_items[$i]['id'] . " - " . $all_items[$i]['time'] . " - " . $all_items[$i]['1_8_0'] . " - " . $all_items[$i]['diff_time'] . "\r\n";
+        
+        $update_sql = "UPDATE power SET diff_energy = ?, diff_time = ?, energy = ? where id = ?";
+        $return_value .= $update_sql . "\r\n";
+        $return_value .= "$diff_energy - $diff_time - $energy - " . $all_items[$i]['id'] . "\r\n";
+        $update_statement = self::$mysqli->prepare($update_sql);
+        $update_statement->bind_param('didi', $diff_energy, $diff_time, $energy, $all_items[$i]['id']);
+        $update_statement->execute();
+    
+        $update_result = $update_statement->get_result();
+        $error = $update_statement->errno;
+
+        if("" <> $error) {
+          $return_value .=  $update_sql . "\n";
+          $return_value .=  $update_statement->error . "\n";
+        }
+        
+      }
+    }
+          
+    return $return_value;      
   }
 }
 
