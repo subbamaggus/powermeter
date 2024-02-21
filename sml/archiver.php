@@ -109,6 +109,8 @@ class MyArchiverAPI {
   }
   
   function purgeDB($limit1, $limit2) {
+    $return_value = "";
+
 /*
 
 purge concept: (separate script)
@@ -116,36 +118,59 @@ keep the last week.
 delete all except one per hour for the last 4 weeks
 delete all except one per day for the restore_error_handler
 
+limit1 ~ 7
+limit2 ~ 28
+
 age
 0-7     all
 7-28    hourly
 >28     daily
 
--- delete sets:
--- DELETE
-SELECT *
-FROM power
-WHERE time < DATE_SUB(NOW(), INTERVAL 2 DAY)
-AND time > DATE_SUB(NOW(), INTERVAL 4 DAY)
-AND id NOT IN (SELECT min(id)
-    FROM `power` 
-    WHERE time < DATE_SUB(NOW(), INTERVAL 2 DAY)
-    AND time > DATE_SUB(NOW(), INTERVAL 4 DAY)
-    GROUP by DATE_FORMAT(time, '%d-%m-%Y %H'))
-
-
--- delete sets:
--- DELETE 
-SELECT *
-FROM power 
-WHERE time < DATE_SUB(NOW(), INTERVAL 4 DAY)
-AND id NOT IN (SELECT min(id)
-    FROM `power` 
-    WHERE time < DATE_SUB(NOW(), INTERVAL 4 DAY)
-    GROUP by DATE_FORMAT(time, '%d-%m-%Y'))
-
-    
 */
+
+    $sql = "DELETE";
+    $sql .= " FROM power";
+    $sql .= " WHERE time < DATE_SUB(NOW(), INTERVAL " . $limit1 . " DAY)";
+    $sql .= " AND time > DATE_SUB(NOW(), INTERVAL " . $limit2 . " DAY)";
+    $sql .= " AND id NOT IN (SELECT min(id)";
+    $sql .= "     FROM `power`";
+    $sql .= "     WHERE time < DATE_SUB(NOW(), INTERVAL " . $limit1 . " DAY)";
+    $sql .= "     AND time > DATE_SUB(NOW(), INTERVAL " . $limit2 . " DAY)";
+    $sql .= "     GROUP by DATE_FORMAT(time, '%d-%m-%Y %H'))";
+    $return_value .= $sql . "\r\n";
+    
+    $statement = self::$mysqli->prepare($sql);
+    $statement->execute();
+    
+    $result = $statement->get_result();
+    $error = $statement->errno;
+    $return_result = "";
+    if("" <> $error) {
+      $return_result .=  $sql . "\n";
+      $return_result .=  $statement->error . "\n";
+    }
+
+
+    $sql = "DELETE";
+    $sql .= " FROM power";
+    $sql .= " WHERE time < DATE_SUB(NOW(), INTERVAL " . $limit2 . " DAY)";
+    $sql .= " AND id NOT IN (SELECT min(id)";
+    $sql .= "     FROM `power` WHERE time < DATE_SUB(NOW(), INTERVAL " . $limit2 . " DAY)";
+    $sql .= "     GROUP by DATE_FORMAT(time, '%d-%m-%Y'))";
+    $return_value .= $sql . "\r\n";
+           
+    $statement = self::$mysqli->prepare($sql);
+    $statement->execute();
+    
+    $result = $statement->get_result();
+    $error = $statement->errno;
+    $return_result = "";
+    if("" <> $error) {
+      $return_result .=  $sql . "\n";
+      $return_result .=  $statement->error . "\n";
+    }
+
+
     // recalc all values between 2 and 5 days
     $sql = "SELECT * FROM power WHERE time < DATE_SUB(NOW(), INTERVAL " . $limit1 . " DAY) AND time > DATE_SUB(NOW(), INTERVAL " . ($limit2 + 1) . " DAY) ORDER BY time";
            
@@ -157,7 +182,7 @@ AND id NOT IN (SELECT min(id)
     $all_items = mysqli_fetch_all($result,MYSQLI_ASSOC);
     $count = count($all_items);
 
-    $return_value = "";    
+    
     for($i = 1; $i < $count; $i++) {
 
       $diff_energy = $all_items[$i]['1_8_0'] - $all_items[$i - 1]['1_8_0'];
