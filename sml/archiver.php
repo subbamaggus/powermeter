@@ -121,13 +121,6 @@ age
 7-28    hourly
 >28     daily
 
---data sets to keep:
-SELECT max(time), max(id), DATE_FORMAT(time, '%d-%m-%Y %H:%i') 
-FROM `power` 
-WHERE time < DATE_SUB(NOW(), INTERVAL 2 DAY)
-AND time > DATE_SUB(NOW(), INTERVAL 4 DAY)
-GROUP by DATE_FORMAT(time, '%d-%m-%Y %H')
-
 -- delete sets:
 -- DELETE
 SELECT *
@@ -140,12 +133,6 @@ AND id NOT IN (SELECT min(id)
     AND time > DATE_SUB(NOW(), INTERVAL 4 DAY)
     GROUP by DATE_FORMAT(time, '%d-%m-%Y %H'))
 
-
---data sets to keep:
-SELECT max(time), max(id), DATE_FORMAT(time, '%d-%m-%Y %H:%i') 
-FROM `power` 
-WHERE time < DATE_SUB(NOW(), INTERVAL 4 DAY)
-GROUP by DATE_FORMAT(time, '%d-%m-%Y %H')
 
 -- delete sets:
 -- DELETE 
