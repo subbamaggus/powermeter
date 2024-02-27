@@ -172,7 +172,7 @@ age
 
 
     // recalc all values between 2 and 5 days
-    $sql = "SELECT * FROM power WHERE time < DATE_SUB(NOW(), INTERVAL " . $limit1 . " DAY) AND time > DATE_SUB(NOW(), INTERVAL " . ($limit2 + 1) . " DAY) ORDER BY time";
+    $sql = "SELECT * FROM power WHERE time < DATE_SUB(NOW(), INTERVAL " . $limit1 . " DAY) AND time > DATE_SUB(NOW(), INTERVAL " . ($limit2 + 2) . " DAY) ORDER BY time";
            
     $statement = self::$mysqli->prepare($sql);
     $statement->execute();
