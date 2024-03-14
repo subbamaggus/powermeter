@@ -1,12 +1,13 @@
 google.charts.load('current', {'packages':['corechart']});
 google.charts.setOnLoadCallback(pollDataSource);
 
+
 var date_from_date = new Date();
-date_from_date.setHours(date_from_date.getHours() - 12);
 var date_to_date = new Date();
 
-var date_from = date_from_date.toISOString("YYYY-MM-DD HH:mm:ss").substring(0, 19).replace("T", ' ');
-var date_to = date_to_date.toISOString("YYYY-MM-DD HH:mm:ss").substring(0, 19).replace("T", ' ');
+
+var date_from = "";
+var date_to = "";
 
 var ring_buffer;
 
@@ -18,7 +19,9 @@ var last_date;
 var intervalID;
 
 function formatDate(date) {
+  console.log("date: " + date);
   var mydate = new Date(date);
+  console.log("mydate: " + mydate);
   return mydate.toISOString("YYYY-MM-DD HH:mm:ss").substring(0, 19).replace("T", ' ');
 }
 
@@ -44,7 +47,7 @@ function changeFrom(diff) {
   console.log("changeFrom:" + diff);
   
   date_from = formatDate(mydate);
-  document.getElementById("date_from").innerHTML = "date_from: " + date_from;
+  document.getElementById("date_from").innerHTML = "" + date_from;
   pollDataSource();
 }
 
@@ -55,7 +58,7 @@ function changeTo(diff) {
   console.log("changeFrom:" + diff);
   
   date_to = formatDate(mydate);
-  document.getElementById("date_to").innerHTML = "date_to: " + date_to;
+  document.getElementById("date_to").innerHTML = "" + date_to;
   pollDataSource();
 }
 
@@ -77,9 +80,16 @@ function handler() {
 }
 
 function pollDataSource() {
+  date_from_date = Date.parse(document.getElementById("date_from").innerHTML);
+  date_to_date = Date.parse(document.getElementById("date_to").innerHTML);
+  
+  date_from = document.getElementById("date_from").innerHTML;
+  date_to = document.getElementById("date_to").innerHTML;
+
+  document.getElementById("link").href = "?date_from=" + date_from + "&date_to=" + date_to + "&sensor=" + document.getElementById("sensor").value;
   var client = new XMLHttpRequest();
   client.onload = handler;
-  client.open("GET", "api.php?date_from=" + date_from + "&date_to=" + date_to + "&sensor=" + document.getElementById("sensor_select").value);
+  client.open("GET", "api.php?date_from=" + date_from + "&date_to=" + date_to + "&sensor=" + document.getElementById("sensor").value);
   client.send();
 }
 
@@ -99,8 +109,8 @@ function drawChart() {
   history_data = google.visualization.arrayToDataTable(ring_buffer);
   history_chart.draw(history_data, history_options);
 
-  document.getElementById("date_from").innerHTML = "date_from: " + date_from;
-  document.getElementById("date_to").innerHTML = "date_to: " + date_to;
+  document.getElementById("date_from").innerHTML = "" + date_from;
+  document.getElementById("date_to").innerHTML = "" + date_to;
 
 }
 
