@@ -42,7 +42,7 @@ function initRingBuffer(data) {
 
 function changeFrom(diff) {
   var mydate = new Date(date_from);
-  mydate.setHours(mydate.getHours() + diff);
+  mydate.setHours(mydate.getHours() + diff - mydate.getTimezoneOffset()/60);
   
   console.log("changeFrom:" + diff);
   
@@ -53,7 +53,7 @@ function changeFrom(diff) {
 
 function changeTo(diff) {
   var mydate = new Date(date_to);
-  mydate.setHours(mydate.getHours() + diff);
+  mydate.setHours(mydate.getHours() + diff - mydate.getTimezoneOffset()/60);
   
   console.log("changeFrom:" + diff);
   
