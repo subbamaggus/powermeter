@@ -32,7 +32,8 @@ function initRingBuffer(data) {
   var i = 0;
   
   function addElement(item) {
-    ring_buffer_l.push([item.date, Number(item.value)]);
+    ring_buffer_l.push([new Date(item.date), Number(item.value)]);
+    //console.log([new Date(item.date), Number(item.value)]);                                               
     i ++;
   }
 
@@ -106,7 +107,6 @@ function drawChart() {
   };
 
   history_chart = new google.visualization.SteppedAreaChart(document.getElementById('history_chart'));
-  history_data = google.visualization.arrayToDataTable(ring_buffer);
   history_chart.draw(history_data, history_options);
 
   document.getElementById("date_from").innerHTML = "" + date_from;
