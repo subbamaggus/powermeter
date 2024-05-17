@@ -128,15 +128,41 @@ age
 
 */
 
-    $sql = "DELETE";
-    $sql .= " FROM power";
+    // TODO oil1
+    $sql  = "UPDATE power";
+    $sql .= "   SET oil2 = ( SELECT avg(oil2)";
+    $sql .= "                  FROM power";
+    $sql .= "                 WHERE time < DATE_SUB(NOW(), INTERVAL " . $limit1 . " DAY)";
+    $sql .= "                   AND time > DATE_SUB(NOW(), INTERVAL " . $limit2 . " DAY)";
+    $sql .= "                   AND oil2 > ( SELECT max(oil2) * 0.995";
+    $sql .= "                                  FROM power";
+    $sql .= "                                 WHERE time < DATE_SUB(NOW(), INTERVAL " . $limit1 . " DAY)";
+    $sql .= "                                   AND time > DATE_SUB(NOW(), INTERVAL " . $limit2 . " DAY)";
+    $sql .= "                              )";
+    $sql .= "              )";
     $sql .= " WHERE time < DATE_SUB(NOW(), INTERVAL " . $limit1 . " DAY)";
-    $sql .= " AND time > DATE_SUB(NOW(), INTERVAL " . $limit2 . " DAY)";
-    $sql .= " AND id NOT IN (SELECT min(id)";
-    $sql .= "     FROM `power`";
-    $sql .= "     WHERE time < DATE_SUB(NOW(), INTERVAL " . $limit1 . " DAY)";
-    $sql .= "     AND time > DATE_SUB(NOW(), INTERVAL " . $limit2 . " DAY)";
-    $sql .= "     GROUP by DATE_FORMAT(time, '%d-%m-%Y %H'))";
+    $sql .= "   AND time > DATE_SUB(NOW(), INTERVAL " . $limit2 . " DAY)";
+    $return_value .= $sql . "\r\n";
+    
+    $statement = self::$mysqli->prepare($sql);
+    $statement->execute();
+    
+    $result = $statement->get_result();
+    $error = $statement->errno;
+    $return_result = "";
+    if("" <> $error) {
+      $return_result .=  $sql . "\n";
+      $return_result .=  $statement->error . "\n";
+    }
+    
+    $sql  = "DELETE FROM power";
+    $sql .= " WHERE time < DATE_SUB(NOW(), INTERVAL " . $limit1 . " DAY)";
+    $sql .= "   AND time > DATE_SUB(NOW(), INTERVAL " . $limit2 . " DAY)";
+    $sql .= "   AND id NOT IN (SELECT min(id)";
+    $sql .= "                   FROM power";
+    $sql .= "                   WHERE time < DATE_SUB(NOW(), INTERVAL " . $limit1 . " DAY)";
+    $sql .= "                     AND time > DATE_SUB(NOW(), INTERVAL " . $limit2 . " DAY)";
+    $sql .= "                   GROUP by DATE_FORMAT(time, '%d-%m-%Y %H'))";
     $return_value .= $sql . "\r\n";
     
     $statement = self::$mysqli->prepare($sql);
@@ -150,13 +176,35 @@ age
       $return_result .=  $statement->error . "\n";
     }
 
-
-    $sql = "DELETE";
-    $sql .= " FROM power";
+    $sql  = "UPDATE power";
+    $sql .= "   SET oil2 = ( SELECT avg(oil2)";
+    $sql .= "                  FROM power";
+    $sql .= "                 WHERE time < DATE_SUB(NOW(), INTERVAL " . $limit2 . " DAY)";
+    $sql .= "                   AND oil2 > ( SELECT max(oil2) * 0.995";
+    $sql .= "                                  FROM power";
+    $sql .= "                                 WHERE time < DATE_SUB(NOW(), INTERVAL " . $limit2 . " DAY)";
+    $sql .= "                              )";
+    $sql .= "              )";
+    $sql .= " WHERE time < DATE_SUB(NOW(), INTERVAL " . $limit1 . " DAY)";
+    $sql .= "   AND time > DATE_SUB(NOW(), INTERVAL " . $limit2 . " DAY)";
+    $return_value .= $sql . "\r\n";
+    
+    $statement = self::$mysqli->prepare($sql);
+    $statement->execute();
+    
+    $result = $statement->get_result();
+    $error = $statement->errno;
+    $return_result = "";
+    if("" <> $error) {
+      $return_result .=  $sql . "\n";
+      $return_result .=  $statement->error . "\n";
+    }
+    
+    $sql  = "DELETE FROM power";
     $sql .= " WHERE time < DATE_SUB(NOW(), INTERVAL " . $limit2 . " DAY)";
-    $sql .= " AND id NOT IN (SELECT min(id)";
-    $sql .= "     FROM `power` WHERE time < DATE_SUB(NOW(), INTERVAL " . $limit2 . " DAY)";
-    $sql .= "     GROUP by DATE_FORMAT(time, '%d-%m-%Y'))";
+    $sql .= "   AND id NOT IN (SELECT min(id)";
+    $sql .= "                    FROM power WHERE time < DATE_SUB(NOW(), INTERVAL " . $limit2 . " DAY)";
+    $sql .= "                   GROUP by DATE_FORMAT(time, '%d-%m-%Y'))";
     $return_value .= $sql . "\r\n";
            
     $statement = self::$mysqli->prepare($sql);
