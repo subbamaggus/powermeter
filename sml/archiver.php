@@ -180,13 +180,15 @@ age
     $sql .= "   SET oil2 = ( SELECT avg(oil2)";
     $sql .= "                  FROM power";
     $sql .= "                 WHERE time < DATE_SUB(NOW(), INTERVAL " . $limit2 . " DAY)";
+    $sql .= "                   AND time > DATE_SUB(NOW(), INTERVAL " . ($limit2 + 3) . " DAY)";
     $sql .= "                   AND oil2 > ( SELECT max(oil2) * 0.995";
     $sql .= "                                  FROM power";
     $sql .= "                                 WHERE time < DATE_SUB(NOW(), INTERVAL " . $limit2 . " DAY)";
+    $sql .= "                                   AND time > DATE_SUB(NOW(), INTERVAL " . ($limit2 + 3) . " DAY)";
     $sql .= "                              )";
     $sql .= "              )";
-    $sql .= " WHERE time < DATE_SUB(NOW(), INTERVAL " . $limit1 . " DAY)";
-    $sql .= "   AND time > DATE_SUB(NOW(), INTERVAL " . $limit2 . " DAY)";
+    $sql .= " WHERE time < DATE_SUB(NOW(), INTERVAL " . $limit2 . " DAY)";
+    $sql .= "   AND time > DATE_SUB(NOW(), INTERVAL " . ($limit2 + 3) . " DAY)";
     $return_value .= $sql . "\r\n";
     
     $statement = self::$mysqli->prepare($sql);
