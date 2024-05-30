@@ -186,6 +186,7 @@ age
     $sql .= "                                 WHERE time < DATE_SUB(NOW(), INTERVAL " . $limit2 . " DAY)";
     $sql .= "                                   AND time > DATE_SUB(NOW(), INTERVAL " . ($limit2 + 3) . " DAY)";
     $sql .= "                              )";
+    $sql .= "                   AND oil2 < 1500";
     $sql .= "              )";
     $sql .= " WHERE time < DATE_SUB(NOW(), INTERVAL " . $limit2 . " DAY)";
     $sql .= "   AND time > DATE_SUB(NOW(), INTERVAL " . ($limit2 + 3) . " DAY)";
