@@ -59,3 +59,5 @@ receive_sml_post.php will process further
 index.php shows the data via google chart
 
 history.php shows past data incl data browsing
+
+
