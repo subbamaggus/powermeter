@@ -130,15 +130,16 @@ age
 
     // TODO oil1
     $sql  = "UPDATE power";
-    $sql .= "   SET oil2 = ( SELECT avg(oil2)";
-    $sql .= "                  FROM power";
-    $sql .= "                 WHERE time < DATE_SUB(NOW(), INTERVAL " . $limit1 . " DAY)";
-    $sql .= "                   AND time > DATE_SUB(NOW(), INTERVAL " . $limit2 . " DAY)";
-    $sql .= "                   AND oil2 > ( SELECT max(oil2) * 0.995";
-    $sql .= "                                  FROM power";
-    $sql .= "                                 WHERE time < DATE_SUB(NOW(), INTERVAL " . $limit1 . " DAY)";
-    $sql .= "                                   AND time > DATE_SUB(NOW(), INTERVAL " . $limit2 . " DAY)";
-    $sql .= "                              )";
+    $sql .= "   SET oil2 = ( SELECT min(oil2)";
+    $sql .= "                  FROM (";
+    $sql .= "                   SELECT *";
+    $sql .= "                     FROM power";
+    $sql .= "                    WHERE time < DATE_SUB(NOW(), INTERVAL " . $limit1 . " DAY)";
+    $sql .= "                      AND time > DATE_SUB(NOW(), INTERVAL " . $limit2 . " DAY)";
+    $sql .= "                      AND oil2 < 1500";
+    $sql .= "                      ORDER BY oil2 DESC";
+    $sql .= "                      LIMIT 200";
+    $sql .= "                       ) mydata";
     $sql .= "              )";
     $sql .= " WHERE time < DATE_SUB(NOW(), INTERVAL " . $limit1 . " DAY)";
     $sql .= "   AND time > DATE_SUB(NOW(), INTERVAL " . $limit2 . " DAY)";
@@ -193,7 +194,7 @@ age
     $return_value .= $sql . "\r\n";
     
     $statement = self::$mysqli->prepare($sql);
-    $statement->execute();
+    //$statement->execute();
     
     $result = $statement->get_result();
     $error = $statement->errno;
@@ -211,7 +212,7 @@ age
     $return_value .= $sql . "\r\n";
            
     $statement = self::$mysqli->prepare($sql);
-    $statement->execute();
+    //$statement->execute();
     
     $result = $statement->get_result();
     $error = $statement->errno;
