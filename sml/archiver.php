@@ -194,7 +194,7 @@ age
     $return_value .= $sql . "\r\n";
     
     $statement = self::$mysqli->prepare($sql);
-    //$statement->execute();
+    $statement->execute();
     
     $result = $statement->get_result();
     $error = $statement->errno;
@@ -212,7 +212,7 @@ age
     $return_value .= $sql . "\r\n";
            
     $statement = self::$mysqli->prepare($sql);
-    //$statement->execute();
+    $statement->execute();
     
     $result = $statement->get_result();
     $error = $statement->errno;
