@@ -41,10 +41,10 @@ class MyArchiverAPI {
     $diff_energy = $value - $last_value;
     $diff_time = strtotime($time) - strtotime($last_time);
     $energy = ($diff_energy * 3600 * 1000) / $diff_time;
-    $oil1 = $myjsondata->oil->Wert1;
+    $oil1 = $myjsondata->oil->StatusSNS->{'VL53L0X-1'}->Distance;
     if(NULL == $oil1)
         $oil1 = -1;
-    $oil2 = $myjsondata->oil->Wert2;
+    $oil2 = $myjsondata->oil->StatusSNS->{'VL53L0X-2'}->Distance;
     if(NULL == $oil2)
         $oil2 = -1;
     
