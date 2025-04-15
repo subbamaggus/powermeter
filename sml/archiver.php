@@ -86,7 +86,17 @@ class MyArchiverAPI {
           
     return $return_result;
   }
-
+  
+  function getVolumeFromDistance($distance) {
+    $maxVol = 1500;
+    $minVol = 0;
+    
+    $maxDistance = 220;
+    $minDistance = 10;
+    
+    return round(($maxVol - $maxVol * ($distance - $minDistance) / ($maxDistance - $minDistance)));
+  }
+  
   function getData($sensor, $from, $to) {
     $sql = "SELECT * FROM power WHERE time > ? and time < ? ORDER BY time";
            
@@ -100,8 +110,13 @@ class MyArchiverAPI {
     
     $return_result = array();
     foreach ($all_items as $item) {
+      $current_value = $item[$sensor];
+      $pos = strpos($sensor, 'oil');
+      if($pos !== false) {
+        $current_value = $this->getVolumeFromDistance($current_value);
+      }
       $return_result[] = [ "date" => $item['time'],
-            "value" => $item[$sensor]
+            "value" => $current_value
           ];
     }
           
