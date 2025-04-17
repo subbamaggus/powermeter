@@ -52,12 +52,18 @@ while 1:
                 read_err_count += 1
                 print("oil sensor not available")	
             
-                if 10 < read_err_count:
-                    try:
-                        read_err_count = 0
-                        restart = requests.get("http://192.168.177.66/cm?cmnd=Restart%201", timeout=10)
-                    except BaseException as iexception:
-                        println("restart failed")
+            if data['oil']['StatusSNS']['VL53L0X-1']['Distance'] is None:
+                read_err_count += 1
+            else:
+                read_err_count = 0
+        
+            if 3 < read_err_count:
+                try:
+                    read_err_count = 0
+                    restart = requests.get("http://192.168.177.66/cm?cmnd=Restart%201", timeout=10)
+                    print("restarted")
+                except BaseException as iexception:
+                    print("restart failed")
 
             data_json = json.dumps(data, indent = 4)
             x = requests.post(url, json=data_json, headers=headers)
