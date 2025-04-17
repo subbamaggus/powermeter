@@ -152,6 +152,7 @@ age
     $sql .= "                    WHERE time < DATE_SUB(NOW(), INTERVAL " . $limit1 . " DAY)";
     $sql .= "                      AND time > DATE_SUB(NOW(), INTERVAL " . $limit2 . " DAY)";
     $sql .= "                      AND oil2 < 1500";
+    $sql .= "                      AND oil2 >= 0";
     $sql .= "                      ORDER BY oil2 DESC";
     $sql .= "                      LIMIT 200";
     $sql .= "                       ) mydata";
@@ -203,6 +204,7 @@ age
     $sql .= "                                   AND time > DATE_SUB(NOW(), INTERVAL " . ($limit2 + 3) . " DAY)";
     $sql .= "                              )";
     $sql .= "                   AND oil2 < 1500";
+    $sql .= "                   AND oil2 >= 0";
     $sql .= "              )";
     $sql .= " WHERE time < DATE_SUB(NOW(), INTERVAL " . $limit2 . " DAY)";
     $sql .= "   AND time > DATE_SUB(NOW(), INTERVAL " . ($limit2 + 3) . " DAY)";
