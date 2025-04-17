@@ -10,6 +10,7 @@ url = 'http://www.weggefoehnt.de/sml/receive_sml_post.php?token=' + configdata['
 headers = {'Content-Type': 'application/json'}
 single_data = {}
 counter = 11
+read_err_count = 0
 
 while 1:
     line = sys.stdin.readline()
@@ -48,8 +49,16 @@ while 1:
             	oil = requests.get("http://192.168.177.66/cm?cmnd=status%2010", timeout=3)
             	data['oil'] = json.loads(oil.text)
 	    except BaseException as exception:
+                read_err_count += 1
                 print("oil sensor not available")	
             
+                if 10 < read_err_count:
+                    try:
+                        read_err_count = 0
+                        restart = requests.get("http://192.168.177.66/cm?cmnd=Restart%201", timeout=10)
+                    except BaseException as iexception:
+                        println("restart failed")
+
             data_json = json.dumps(data, indent = 4)
             x = requests.post(url, json=data_json, headers=headers)
             print(x.text)
