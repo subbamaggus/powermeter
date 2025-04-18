@@ -91,8 +91,8 @@ class MyArchiverAPI {
     $maxVol = 1500;
     $minVol = 0;
     
-    $maxDistance = 220;
-    $minDistance = 10;
+    $maxDistance = 115;
+    $minDistance = -15;
     
     return round(($maxVol - $maxVol * ($distance - $minDistance) / ($maxDistance - $minDistance)));
   }
