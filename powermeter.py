@@ -9,6 +9,7 @@ with open("/home/pi/powermeter.json") as json_data_file:
 url = 'http://www.weggefoehnt.de/sml/receive_sml_post.php?token=' + configdata['secret_token']
 headers = {'Content-Type': 'application/json'}
 single_data = {}
+good_reading_oil={}
 counter = 11
 read_err_count = 0
 
@@ -46,17 +47,23 @@ while 1:
             data = {}
             data['StatusSNS'] = data_sml
             try: 
-            	oil = requests.get("http://192.168.178.193/cm?cmnd=status%2010", timeout=3)
-            	data['oil'] = json.loads(oil.text)
-	    except BaseException as exception:
+                oil = requests.get("http://192.168.178.193/cm?cmnd=status%2010", timeout=3)
+                temp_oil = json.loads(oil.text)
+                
+                if temp_oil['StatusSNS']['VL53L0X-1']['Distance'] is None:
+                    read_err_count += 1
+                if temp_oil['StatusSNS']['VL53L0X-2']['Distance'] is None:
+                    read_err_count += 1
+
+                if 0 == read_err_count:
+                    good_reading_oil = temp_oil
+
+            except BaseException as exception:
                 read_err_count += 1
-                print("oil sensor not available")	
+                print("oil sensor not available")        
             
-            if data['oil']['StatusSNS']['VL53L0X-1']['Distance'] is None:
-                read_err_count += 1
-            else:
-                read_err_count = 0
-        
+            data['oil'] = good_reading_oil
+
             if 3 < read_err_count:
                 try:
                     read_err_count = 0
