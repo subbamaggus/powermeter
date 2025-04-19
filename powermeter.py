@@ -46,7 +46,7 @@ while 1:
             data = {}
             data['StatusSNS'] = data_sml
             try: 
-            	oil = requests.get("http://192.168.177.66/cm?cmnd=status%2010", timeout=3)
+            	oil = requests.get("http://192.168.178.193/cm?cmnd=status%2010", timeout=3)
             	data['oil'] = json.loads(oil.text)
 	    except BaseException as exception:
                 read_err_count += 1
@@ -60,7 +60,7 @@ while 1:
             if 3 < read_err_count:
                 try:
                     read_err_count = 0
-                    restart = requests.get("http://192.168.177.66/cm?cmnd=Restart%201", timeout=10)
+                    restart = requests.get("http://192.168.178.193/cm?cmnd=Restart%201", timeout=10)
                     print("restarted")
                 except BaseException as iexception:
                     print("restart failed")
