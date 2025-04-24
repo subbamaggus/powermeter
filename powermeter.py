@@ -9,7 +9,7 @@ with open("/home/pi/powermeter.json") as json_data_file:
 url = 'http://www.weggefoehnt.de/sml/receive_sml_post.php?token=' + configdata['secret_token']
 headers = {'Content-Type': 'application/json'}
 single_data = {}
-good_reading_oil={}
+good_reading_oil=json.loads('{"StatusSNS":{"Time":"2025-04-24T15:55:38","VL53L0X-1":{"Distance":-1},"VL53L0X-2":{"Distance":-1}}}')
 counter = 11
 read_err_count = 0
 
