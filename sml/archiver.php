@@ -86,6 +86,7 @@ class MyArchiverAPI {
           
     return $return_result;
   }
+  
   function getDistanceFromVolume($volume) {
     $maxVol = 1500;
     $minVol = 0;
@@ -93,7 +94,7 @@ class MyArchiverAPI {
     $maxDistance = 115;
     $minDistance = -15;
 
-    return round(($volume / $maxVol -1) * ($maxDistance - $minDistance) + $minDistance);
+    return round((($volume - $maxVol ) * ($maxDistance - $minDistance) -  $maxVol * $minDistance) / (- $maxVol ));
   }
   
   function getVolumeFromDistance($distance) {
