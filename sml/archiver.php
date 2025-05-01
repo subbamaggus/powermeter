@@ -43,10 +43,10 @@ class MyArchiverAPI {
     $energy = ($diff_energy * 3600 * 1000) / $diff_time;
     $oil1 = $myjsondata->oil->StatusSNS->{'VL53L0X-1'}->Distance;
     if(NULL == $oil1)
-        $oil1 = -1;
+        $oil1 = -99;
     $oil2 = $myjsondata->oil->StatusSNS->{'VL53L0X-2'}->Distance;
     if(NULL == $oil2)
-        $oil2 = -1;
+        $oil2 = -99;
     
     $sql = "INSERT INTO power (time, 1_8_0, diff_energy, diff_time, energy, oil1, oil2) VALUES (?, ?, ?, ?, ?, ?, ?)";
     $statement = self::$mysqli->prepare($sql);
@@ -85,6 +85,15 @@ class MyArchiverAPI {
           ];
           
     return $return_result;
+  }
+  function getDistanceFromVolume($volume) {
+    $maxVol = 1500;
+    $minVol = 0;
+    
+    $maxDistance = 115;
+    $minDistance = -15;
+
+    return round(($volume / $maxVol -1) * ($maxDistance - $minDistance) + $minDistance);
   }
   
   function getVolumeFromDistance($distance) {
