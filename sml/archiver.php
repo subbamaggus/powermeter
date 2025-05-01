@@ -123,7 +123,10 @@ class MyArchiverAPI {
       $current_value = $item[$sensor];
       $pos = strpos($sensor, 'oil');
       if($pos !== false) {
-        $current_value = $this->getVolumeFromDistance($current_value);
+        if(-99 == $current_value)
+            $current_value = 0;
+        else
+          $current_value = $this->getVolumeFromDistance($current_value);
       }
       $return_result[] = [ "date" => $item['time'],
             "value" => $current_value
