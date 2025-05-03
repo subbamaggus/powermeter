@@ -157,21 +157,23 @@ age
 */
 
     // TODO oil1
-    $sql  = "UPDATE power";
-    $sql .= "   SET oil2 = ( SELECT min(oil2)";
-    $sql .= "                  FROM (";
-    $sql .= "                   SELECT *";
-    $sql .= "                     FROM power";
-    $sql .= "                    WHERE time < DATE_SUB(NOW(), INTERVAL " . $limit1 . " DAY)";
-    $sql .= "                      AND time > DATE_SUB(NOW(), INTERVAL " . $limit2 . " DAY)";
-    $sql .= "                      AND oil2 < 1500";
-    $sql .= "                      AND oil2 >= 0";
-    $sql .= "                      ORDER BY oil2 DESC";
-    $sql .= "                      LIMIT 200";
-    $sql .= "                       ) mydata";
-    $sql .= "              )";
-    $sql .= " WHERE time < DATE_SUB(NOW(), INTERVAL " . $limit1 . " DAY)";
-    $sql .= "   AND time > DATE_SUB(NOW(), INTERVAL " . $limit2 . " DAY)";
+    $sql = <<< MYSQLSTMT
+    UPDATE power
+       SET oil2 = ( SELECT min(oil2)
+                      FROM (
+                             SELECT *
+                               FROM power
+                              WHERE time < DATE_SUB(NOW(), INTERVAL $limit1 DAY)
+                                AND time > DATE_SUB(NOW(), INTERVAL $limit2 DAY)
+                                AND oil2 < 1500
+                                AND oil2 >= 0
+                              ORDER BY oil2 DESC
+                              LIMIT 200
+                           ) mydata
+                  )
+    WHERE time < DATE_SUB(NOW(), INTERVAL $limit1 DAY)
+      AND time > DATE_SUB(NOW(), INTERVAL $limit2 DAY)
+MYSQLSTMT;
     $return_value .= $sql . "\r\n";
     
     $statement = self::$mysqli->prepare($sql);
@@ -185,14 +187,16 @@ age
       $return_result .=  $statement->error . "\n";
     }
     
-    $sql  = "DELETE FROM power";
-    $sql .= " WHERE time < DATE_SUB(NOW(), INTERVAL " . $limit1 . " DAY)";
-    $sql .= "   AND time > DATE_SUB(NOW(), INTERVAL " . $limit2 . " DAY)";
-    $sql .= "   AND id NOT IN (SELECT min(id)";
-    $sql .= "                   FROM power";
-    $sql .= "                   WHERE time < DATE_SUB(NOW(), INTERVAL " . $limit1 . " DAY)";
-    $sql .= "                     AND time > DATE_SUB(NOW(), INTERVAL " . $limit2 . " DAY)";
-    $sql .= "                   GROUP by DATE_FORMAT(time, '%d-%m-%Y %H'))";
+    $sql = <<< MYSQLSTMT
+    DELETE FROM power
+     WHERE time < DATE_SUB(NOW(), INTERVAL $limit1 DAY)
+       AND time > DATE_SUB(NOW(), INTERVAL $limit2 DAY)
+       AND id NOT IN (SELECT min(id)
+                       FROM power
+                       WHERE time < DATE_SUB(NOW(), INTERVAL $limit1 DAY)
+                         AND time > DATE_SUB(NOW(), INTERVAL $limit2 DAY)
+                       GROUP by DATE_FORMAT(time, '%d-%m-%Y %H'))
+MYSQLSTMT;
     $return_value .= $sql . "\r\n";
     
     $statement = self::$mysqli->prepare($sql);
@@ -205,22 +209,24 @@ age
       $return_result .=  $sql . "\n";
       $return_result .=  $statement->error . "\n";
     }
-
-    $sql  = "UPDATE power";
-    $sql .= "   SET oil2 = ( SELECT avg(oil2)";
-    $sql .= "                  FROM power";
-    $sql .= "                 WHERE time < DATE_SUB(NOW(), INTERVAL " . $limit2 . " DAY)";
-    $sql .= "                   AND time > DATE_SUB(NOW(), INTERVAL " . ($limit2 + 3) . " DAY)";
-    $sql .= "                   AND oil2 > ( SELECT max(oil2) * 0.995";
-    $sql .= "                                  FROM power";
-    $sql .= "                                 WHERE time < DATE_SUB(NOW(), INTERVAL " . $limit2 . " DAY)";
-    $sql .= "                                   AND time > DATE_SUB(NOW(), INTERVAL " . ($limit2 + 3) . " DAY)";
-    $sql .= "                              )";
-    $sql .= "                   AND oil2 < 1500";
-    $sql .= "                   AND oil2 >= 0";
-    $sql .= "              )";
-    $sql .= " WHERE time < DATE_SUB(NOW(), INTERVAL " . $limit2 . " DAY)";
-    $sql .= "   AND time > DATE_SUB(NOW(), INTERVAL " . ($limit2 + 3) . " DAY)";
+    $limit2and3 = ($limit2 + 3);
+    $sql = <<< MYSQLSTMT
+    UPDATE power
+       SET oil2 = ( SELECT avg(oil2)
+                      FROM power
+                     WHERE time < DATE_SUB(NOW(), INTERVAL $limit2 DAY)
+                       AND time > DATE_SUB(NOW(), INTERVAL $limit2and3 DAY)
+                       AND oil2 > ( SELECT max(oil2) * 0.995
+                                      FROM power
+                                     WHERE time < DATE_SUB(NOW(), INTERVAL $limit2 DAY)
+                                       AND time > DATE_SUB(NOW(), INTERVAL $limit2and3 DAY)
+                                  )
+                       AND oil2 < 1500
+                       AND oil2 >= 0
+                  )
+     WHERE time < DATE_SUB(NOW(), INTERVAL $limit2 DAY)
+       AND time > DATE_SUB(NOW(), INTERVAL ($limit2 + 3) DAY)
+MYSQLSTMT;
     $return_value .= $sql . "\r\n";
     
     $statement = self::$mysqli->prepare($sql);
@@ -234,11 +240,13 @@ age
       $return_result .=  $statement->error . "\n";
     }
     
-    $sql  = "DELETE FROM power";
-    $sql .= " WHERE time < DATE_SUB(NOW(), INTERVAL " . $limit2 . " DAY)";
-    $sql .= "   AND id NOT IN (SELECT min(id)";
-    $sql .= "                    FROM power WHERE time < DATE_SUB(NOW(), INTERVAL " . $limit2 . " DAY)";
-    $sql .= "                   GROUP by DATE_FORMAT(time, '%d-%m-%Y'))";
+    $sql = <<< MYSQLSTMT
+    DELETE FROM power
+     WHERE time < DATE_SUB(NOW(), INTERVAL $limit2 DAY)
+        AND id NOT IN (SELECT min(id)
+                     FROM power WHERE time < DATE_SUB(NOW(), INTERVAL $limit2 DAY)
+                    GROUP by DATE_FORMAT(time, '%d-%m-%Y'))
+MYSQLSTMT;
     $return_value .= $sql . "\r\n";
            
     $statement = self::$mysqli->prepare($sql);
