@@ -156,7 +156,36 @@ age
 
 */
 
-    // TODO oil1
+    $sql = <<< MYSQLSTMT
+    UPDATE power
+       SET oil1 = ( SELECT min(oil1)
+                      FROM (
+                             SELECT *
+                               FROM power
+                              WHERE time < DATE_SUB(NOW(), INTERVAL $limit1 DAY)
+                                AND time > DATE_SUB(NOW(), INTERVAL $limit2 DAY)
+                                AND oil1 < 1500
+                                AND oil1 >= 0
+                              ORDER BY oil1 DESC
+                              LIMIT 200
+                           ) mydata
+                  )
+    WHERE time < DATE_SUB(NOW(), INTERVAL $limit1 DAY)
+      AND time > DATE_SUB(NOW(), INTERVAL $limit2 DAY)
+MYSQLSTMT;
+    $return_value .= $sql . "\r\n";
+    
+    $statement = self::$mysqli->prepare($sql);
+    $statement->execute();
+    
+    $result = $statement->get_result();
+    $error = $statement->errno;
+    $return_result = "";
+    if("" <> $error) {
+      $return_result .=  $sql . "\n";
+      $return_result .=  $statement->error . "\n";
+    }
+
     $sql = <<< MYSQLSTMT
     UPDATE power
        SET oil2 = ( SELECT min(oil2)
@@ -186,7 +215,7 @@ MYSQLSTMT;
       $return_result .=  $sql . "\n";
       $return_result .=  $statement->error . "\n";
     }
-    
+
     $sql = <<< MYSQLSTMT
     DELETE FROM power
      WHERE time < DATE_SUB(NOW(), INTERVAL $limit1 DAY)
@@ -209,7 +238,39 @@ MYSQLSTMT;
       $return_result .=  $sql . "\n";
       $return_result .=  $statement->error . "\n";
     }
+
+
     $limit2and3 = ($limit2 + 3);
+    $sql = <<< MYSQLSTMT
+    UPDATE power
+       SET oil1 = ( SELECT avg(oil1)
+                      FROM power
+                     WHERE time < DATE_SUB(NOW(), INTERVAL $limit2 DAY)
+                       AND time > DATE_SUB(NOW(), INTERVAL $limit2and3 DAY)
+                       AND oil1 > ( SELECT max(oil1) * 0.995
+                                      FROM power
+                                     WHERE time < DATE_SUB(NOW(), INTERVAL $limit2 DAY)
+                                       AND time > DATE_SUB(NOW(), INTERVAL $limit2and3 DAY)
+                                  )
+                       AND oil1 < 1500
+                       AND oil1 >= 0
+                  )
+     WHERE time < DATE_SUB(NOW(), INTERVAL $limit2 DAY)
+       AND time > DATE_SUB(NOW(), INTERVAL ($limit2 + 3) DAY)
+MYSQLSTMT;
+    $return_value .= $sql . "\r\n";
+    
+    $statement = self::$mysqli->prepare($sql);
+    $statement->execute();
+    
+    $result = $statement->get_result();
+    $error = $statement->errno;
+    $return_result = "";
+    if("" <> $error) {
+      $return_result .=  $sql . "\n";
+      $return_result .=  $statement->error . "\n";
+    }
+
     $sql = <<< MYSQLSTMT
     UPDATE power
        SET oil2 = ( SELECT avg(oil2)
